@@ -1,7 +1,9 @@
-package com.wesleyvicen.Serasa.service;
+package com.wesleyvicen.serasa.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
@@ -9,12 +11,12 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.wesleyvicen.Serasa.dto.SellerActingDTO;
-import com.wesleyvicen.Serasa.dto.SellerDTO;
-import com.wesleyvicen.Serasa.model.Acting;
-import com.wesleyvicen.Serasa.model.Seller;
-import com.wesleyvicen.Serasa.repository.ActingRepository;
-import com.wesleyvicen.Serasa.repository.SellerRepository;
+import com.wesleyvicen.serasa.dto.SellerActingDTO;
+import com.wesleyvicen.serasa.dto.SellerAllDTO;
+import com.wesleyvicen.serasa.dto.SellerDTO;
+import com.wesleyvicen.serasa.model.Acting;
+import com.wesleyvicen.serasa.model.Seller;
+import com.wesleyvicen.serasa.repository.SellerRepository;
 
 @Service
 public class SellerService {
@@ -23,12 +25,29 @@ public class SellerService {
 	SellerRepository sellerRepository;
 	
 	@Autowired
-	ActingRepository actingRepository;
+	ActingService actingservice;
 
 	@Transactional
-	public List<Seller> findAll() {
-
-		return sellerRepository.findAll();
+	public List<SellerAllDTO> findAll() {
+		var list = sellerRepository.findAll();
+		
+		List<SellerAllDTO> listAll = new ArrayList<>();
+		
+		for (int i = 0; i < list.size(); i++) {
+			Acting acting = actingservice.searchRegion(list.get(i).getRegion());
+			listAll.add(SellerAllDTO.builder()
+					.nome(list.get(i).getName())
+					.telefone(list.get(i).getPhone())
+					.idade(list.get(i).getAge())
+					.cidade(list.get(i).getCity())
+					.estado(list.get(i).getState())
+					.estados(acting.getStates())
+					.build());
+		}
+		if(listAll.isEmpty()) {
+			 throw new NoSuchElementException("Não existe Vendedores");
+		}
+		return listAll;
 	}
 	
 	  @Transactional
@@ -51,8 +70,15 @@ public class SellerService {
 	  
 	  @Transactional
 	  public SellerActingDTO search(Integer id) {
-	    Optional<Seller> obj = sellerRepository.findById(id);
-	    Acting acting = actingRepository.searchRegion(obj.get().getRegion());
+			Optional<Seller> obj;
+			Acting acting;
+			try {
+				obj = sellerRepository.findById(id);
+				acting = actingservice.searchRegion(obj.get().getRegion());
+			} catch (NoSuchElementException e) {
+				throw new NoSuchElementException("Vendedor não existe");
+			}
+	    
 	    return SellerActingDTO.builder()
 	    		.nome(obj.get().getName())
 	    		.dataInclusao(obj.get().getInsertionDate())

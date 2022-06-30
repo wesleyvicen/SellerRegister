@@ -1,8 +1,8 @@
-package com.wesleyvicen.Serasa.controller;
+package com.wesleyvicen.serasa.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wesleyvicen.Serasa.dto.ActingDTO;
-import com.wesleyvicen.Serasa.keys.RotasKeys;
-import com.wesleyvicen.Serasa.model.Acting;
-import com.wesleyvicen.Serasa.service.ActingService;
+import com.wesleyvicen.serasa.dto.ActingDTO;
+import com.wesleyvicen.serasa.keys.RotasKeys;
+import com.wesleyvicen.serasa.model.Acting;
+import com.wesleyvicen.serasa.service.ActingService;
 
 @RestController
 @RequestMapping(value = RotasKeys.ACTING)
@@ -29,12 +29,9 @@ public class ActingController {
 		try {
 			List<Acting> obj = actingService.findAll();
 			return ResponseEntity.ok().body(obj);
-		} catch (ObjectNotFoundException e) {
+		} catch (NoSuchElementException e) {
 			return new ResponseEntity<>("Não temos nenhuma atuação cadastrada :(", HttpStatus.NOT_ACCEPTABLE);
-		} catch (Exception e) {
-			return new ResponseEntity<>(("Houve algum erro intento, por favor tente mais tarde."),
-					HttpStatus.BAD_REQUEST);
-		}
+		} 
 
 	}
 

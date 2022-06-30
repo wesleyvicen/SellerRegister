@@ -1,4 +1,4 @@
-package com.wesleyvicen.Serasa.dto;
+package com.wesleyvicen.serasa.dto;
 
 import java.util.List;
 

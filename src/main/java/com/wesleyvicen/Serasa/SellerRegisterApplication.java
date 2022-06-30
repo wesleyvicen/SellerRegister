@@ -1,4 +1,4 @@
-package com.wesleyvicen.Serasa;
+package com.wesleyvicen.serasa;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

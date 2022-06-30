@@ -1,11 +1,11 @@
-package com.wesleyvicen.Serasa.repository;
+package com.wesleyvicen.serasa.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.wesleyvicen.Serasa.model.Acting;
+import com.wesleyvicen.serasa.model.Acting;
 
 @Repository
 public interface ActingRepository extends JpaRepository<Acting, Integer> {

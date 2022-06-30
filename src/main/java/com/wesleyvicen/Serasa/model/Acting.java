@@ -1,4 +1,4 @@
-package com.wesleyvicen.Serasa.model;
+package com.wesleyvicen.serasa.model;
 
 import java.io.Serializable;
 import java.util.List;
